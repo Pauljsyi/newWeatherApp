@@ -1,5 +1,4 @@
 const request = require('request')
-const express = require('express')
 require('dotenv').config('./../bin/dev');
 var http = require('http')
 
@@ -14,14 +13,11 @@ request({ url: url, json:true }, (error, response) => {
     } else if (response.body.success === false){
         console.log("Can't find location...")
     } else { 
-        const body = response.body
-        const current = body.current
-        const icon = body.current.weather_icons[0]
-        const description = body.current.weather_descriptions[0]
-        const city = body.location.name 
-        const region = body.location.region 
+        const current = response.body.current
+        const description = current.weather_descriptions[0]
+        const city = response.body.location.name 
     
-            console.log(`${body.location.localtime} \n${description} in ${city}. \nIt is currently ${current.temperature} degrees out. It feels like ${current.feelslike} degrees out`)
+            console.log(`${response.body.location.localtime} \n${description} in ${city}. \nIt is currently ${current.temperature} degrees out. It feels like ${current.feelslike} degrees out`)
 
     } 
 })
