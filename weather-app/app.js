@@ -1,23 +1,26 @@
-const request = require('request')
+const request = require('request');
 require('dotenv').config('./../bin/dev');
-var http = require('http')
+var http = require('http');
 
-var api =process.env.API_KEY
+var api =process.env.API_KEY;
 
-const url = `http://api.weatherstack.com/current?access_key=${api}&query=Seattle&units=f`
+const url = `http://api.weatherstack.com/current?access_key=${api}&query=Seattle&units=f`;
 
 request({ url: url, json:true }, (error, response) => { 
 
     if (error) {
-        console.log('You are not connected to the internet')
+        console.log('You are not connected to the internet');
     } else if (response.body.success === false){
-        console.log("Can't find location...")
+        console.log("Can't find location...");
     } else { 
-        const current = response.body.current
-        const description = current.weather_descriptions[0]
-        const city = response.body.location.name 
+        const current = response.body.current;
+        const description = current.weather_descriptions[0];
+        const city = response.body.location.name ;
+        const currTime = response.body.location.localtime;
+        const currTemp = current.temperature;
+        const feelsLike = current.feelslike;
     
-            console.log(`${response.body.location.localtime} \n${description} in ${city}. \nIt is currently ${current.temperature} degrees out. It feels like ${current.feelslike} degrees out`)
+            console.log(`${currTime} \n${description} in ${city}. \nIt is currently ${currTemp} degrees out. It feels like ${feelsLike} degrees out`);
 
     } 
 })
