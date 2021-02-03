@@ -7,21 +7,30 @@ const fs = require('fs');
 
 console.log(process.argv)
 const address = process.argv[2]
+console.log(address)
 
-geocode(address, (error, data) => {
-    if (error) {
-        return console.log('Geocode error:', error);
-    }
-    
-    forecast(data.latitude, data.longitude, (error, forecastData) => {
-        console.log('latitude:',  data.latitude, 'longitude:', data.longitude)
+if (address === undefined) {
+    console.log("no address provided, please type a valid address")
+} else {
+
+    geocode(address, (error, data) => {
         if (error) {
-            return console.log('Forecast error:', error);
+            return console.log('Geocode error:', error);
         }
         
-        // console.log('Forecast data:', forecastData);
-        console.log('data location:', data.location)
-        console.log('forecast data:',  forecastData)
+        forecast(data.latitude, data.longitude, (error, forecastData) => {
+            console.log('latitude:',  data.latitude, 'longitude:', data.longitude)
+            if (error) {
+                return console.log('Forecast error:', error);
+            }
+            
+            // console.log('Forecast data:', forecastData);
+            console.log('data location:', data.location)
+            console.log('forecast data:',  forecastData)
+        });
     });
-});
+    
+
+}
+
 
