@@ -85,14 +85,13 @@ const weather = `http://api.weatherstack.com/current?access_key=${api}&query=Los
 
 const forecast = (long, lat, callback) => {
     const weather = `http://api.weatherstack.com/current?access_key=${api}&query=${lat},${long}&units=f`
-    console.log(weather)
     
     request({ url: weather, json: true}, (error, response) => {
         // console.log(response.body)
         if (error) {
-            console.log('cannot connect to internet, please check your connection!')
+            callback('cannot connect to internet, please check your connection!', undefined)
         } else if (response.body.success === false){
-            console.log('cannot find results, please try another search')
+            callback('cannot find results, please try another search', undefined)
         } else {
             const body = response.body
             const current = body.current
@@ -101,7 +100,7 @@ const forecast = (long, lat, callback) => {
             const city = body.location.name 
             const region = body.location.region
     
-                console.log(`${body.location.localtime} \n${description} in ${city}. \nIt is currently ${current.temperature} degrees out. It feels like ${current.feelslike} degrees out`)
+                callback(undefined, `${body.location.localtime} \n${description} in ${city}. \nIt is currently ${current.temperature} degrees out. It feels like ${current.feelslike} degrees out`)
 
         }
     })
