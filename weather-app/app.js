@@ -4,6 +4,7 @@ require('dotenv').config('./../bin/dev');
 var http = require('http')
 
 var api =process.env.API_KEY
+var token = process.env.TOKEN
 
 const url = `http://api.weatherstack.com/current?access_key=${api}&query=Los%Angeles&units=f`
 
@@ -27,10 +28,10 @@ const url = `http://api.weatherstack.com/current?access_key=${api}&query=Los%Ang
 // })
 
 //success output
-    const geoCode = 'https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=pk.eyJ1IjoiY29kZXh4cHJlcyIsImEiOiJja2tvaTljaTYwYWEzMm5vNmRpankxa25hIn0.j0BCUl69x1Eu7g1TNHMnjQ&limit=1'
+    const geoCode = `https://api.mapbox.com/geocoding/v5/mapbox.places/dubai.json?access_token=${token}`
 
 // cannot find coordinates error
-    // const geoCode = 'https://api.mapbox.com/geocoding/v5/mapbox.places/324567.json?access_token=pk.eyJ1IjoiY29kZXh4cHJlcyIsImEiOiJja2tvaTljaTYwYWEzMm5vNmRpankxa25hIn0.j0BCUl69x1Eu7g1TNHMnjQ&limit=1'
+    // const geoCode = `https://api.mapbox.com/geocoding/v5/mapbox.places/324567.json?access_token=${token}`
 
 
 request( {url: geoCode, json:true}, (error, response) => {
@@ -43,25 +44,30 @@ request( {url: geoCode, json:true}, (error, response) => {
     } else { 
         const latitude = response.body.features[0].center[1]
         const longitude = response.body.features[0].center[0]
-        console.log('latitude:', latitude, 'longitude:', longitude)
+        // console.log('latitude:', latitude, 'longitude:', longitude)
     }
 } )
 
 
 const geocode = (address, callback) => {
-    const url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json?access_token=pk.eyJ1IjoiY29kZXh4cHJlcyIsImEiOiJja2tvaTljaTYwYWEzMm5vNmRpankxa25hIn0.j0BCUl69x1Eu7g1TNHMnjQ&limit=1'
-    console.log(url)
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/` + encodeURIComponent(address) + `.json?access_token=${token}`
 
     request({ url: url, json: true}, (error, response) => {
         if (error) {
             callback('Cannot connect', undefined)
         } else if (response.body.features.length === 0) {
             callback('cannot find coordinates, try another search', undefined)
+        } else {
+            callback(undefined, {
+                latitude: response.body.features[0].center[1],
+                longitude: response.body.features[0].center[0],
+                location: response.body.features[0].place_name
+            })
         }
     })
 }
 
-geocode('nononsdfsadfo', (error, data)=>{
-console.log('error', error)
+geocode('tokyo', (error, data)=>{
+// console.log('error', error)
 console.log('data', data)
 })
